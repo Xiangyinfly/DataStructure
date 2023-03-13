@@ -4,65 +4,64 @@ import java.util.Stack;
 
 public class singleLinkedList {
     //初始化头节点，不放置任何数据
-    public Node head = new Node(0, "");
+    public Node_single head = new Node_single(0, "");
 
     //将数据加到链表的最后
-    public void add(Node node) {
+    public void add(Node_single nodeSingle) {
         //head节点不能动，因此需要temp辅助遍历
-        Node point = head;
+        Node_single point = head;
         while (true) {
             if (point.next == null) {
                 break;
             }
             point = point.next;
         }
-        point.next = node;
+        point.next = nodeSingle;
     }
 
     //按顺序将节点插入指定位置
-    public void addByOrder(Node node) {
-        Node point = head;
-        boolean flag = false;
+    public void addByOrder(Node_single nodeSingle) {
+        Node_single point = head;
         while (true) {
             if (point.next == null) {
                 break;
             }
-            if (point.next.num > node.num) {
+            if (point.next.num > nodeSingle.num) {
                 break;
-            } else if (point.num == node.num) {
+            } else if (point.num == nodeSingle.num) {
                 System.out.println("节点已被插入过...");
                 return;
             }
             point = point.next;
         }
 
-        node.next = point.next;
-        point.next = node;
+        nodeSingle.next = point.next;
+        point.next = nodeSingle;
     }
 
-    public void update(Node newNode) {
-        Node point = head;
+    public void update(Node_single newNodeSingle) {
+        Node_single point = head;
         while (true) {
             if (point.next == null) {
                 System.out.println("节点不存在...");
                 break;
             }
-            if (point.num == newNode.num) {
-                point.attribute = newNode.attribute;
+            if (point.num == newNodeSingle.num) {
+                point.attribute = newNodeSingle.attribute;
                 break;
             }
             point = point.next;
         }
     }
 
-    public void delete(Node node) {
-        Node point = head;
+    public void delete(Node_single nodeSingle) {
+        Node_single point = head;
         while (true) {
             if (point.next == null) {
                 System.out.println("节点不存在...");
                 break;
             }
-            if (point.next.num == node.num) {
+            if (point.next.num == nodeSingle.num) {
                 point.next = point.next.next;
                 break;
             }
@@ -76,7 +75,7 @@ public class singleLinkedList {
             System.out.println("链表为空...");
             return;
         }
-        Node point = head.next;
+        Node_single point = head.next;
         while (point != null) {
             System.out.println(point);
             point = point.next;
@@ -86,9 +85,9 @@ public class singleLinkedList {
     //========================一些test========================
 
     //获取单链表有效节点的个数
-    public static int getLength(Node head) {
+    public static int getLength(Node_single head) {
         int length = 0;
-        Node point = head.next;
+        Node_single point = head.next;
         while (point != null) {
             length ++;
             point = point.next;
@@ -97,9 +96,9 @@ public class singleLinkedList {
     }
 
     //查找单链表的倒数第k个节点
-    public static Node findLastIndexNode(Node head,int index) {
+    public static Node_single findLastIndexNode(Node_single head, int index) {
         int length = getLength(head);
-        Node point = head.next;
+        Node_single point = head.next;
         if (index <= 0 || index > length) {
             System.out.println("节点不存在...");
             return null;
@@ -111,14 +110,14 @@ public class singleLinkedList {
     }
 
     //单链表的反转
-    public static void reverse(Node head) {
+    public static void reverse(Node_single head) {
         if (head.next == null || head.next.next == null) {
             return;
         }
 
-        Node point = head.next;
-        Node temp = null;
-        Node reverseHead = new Node(0,"");
+        Node_single point = head.next;
+        Node_single temp = null;
+        Node_single reverseHead = new Node_single(0,"");
 
         while (point != null) {
             //🌟此处使用头插法
@@ -131,31 +130,31 @@ public class singleLinkedList {
     }
 
     //利用栈实现单链表的逆序打印
-    public static void reversePrint(Node head) {
+    public static void reversePrint(Node_single head) {
         if (head.next == null) {
             return;
         }
         //创建栈并将节点压入
-        Stack<Node> nodes = new Stack<>();
-        Node point = head.next;
+        Stack<Node_single> nodeSingles = new Stack<>();
+        Node_single point = head.next;
         while (point.next != null) {
-            nodes.push(point);
+            nodeSingles.push(point);
             point = point.next;
         }
         //逆序打印
-        while (nodes.size() > 0) {
-            System.out.println(nodes.pop());
+        while (nodeSingles.size() > 0) {
+            System.out.println(nodeSingles.pop());
         }
     }
 
     //合并两个有序单链表，使其合并之后有序
     //此方法会将两个链表都改变为合并链表（因为没有将head_.next置空，即未断开head_与后面节点的连接）
-    public static void combineList(Node head,Node head_) {
+    public static void combineList(Node_single head, Node_single head_) {
         if (head.next != null && head_.next != null) {
-            Node point_ = head_.next;
-            Node point = head;
+            Node_single point_ = head_.next;
+            Node_single point = head;
             while (point_ != null) {//遍历head_所在的链表，直到最后一个节点
-                Node temp_ = point_.next;//保存point_.next到temp
+                Node_single temp_ = point_.next;//保存point_.next到temp
                 while (point.next != null) {//遍历head所在的链表，因为判定插入位置要取两个节点之间的区间，所以*至多*遍历到倒数第二个节点。
                     if (point.next.num >= point_.num) {
                         //在point和point.next中间插入point_
@@ -178,12 +177,12 @@ public class singleLinkedList {
 
 
 
-class Node {
+class Node_single {
     public int num;
     public String attribute;
-    public Node next;
+    public Node_single next;
 
-    public Node(int num, String attribute) {
+    public Node_single(int num, String attribute) {
         this.num = num;
         this.attribute = attribute;
     }

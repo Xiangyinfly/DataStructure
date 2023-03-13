@@ -3,22 +3,22 @@ package com.LinkedList;
 public class test {
     public static void main(String[] args) {
 
-        Node node1 = new Node(1,"a");
-        Node node2 = new Node(2,"a");
-        Node node3 = new Node(3,"a");
-        Node node4 = new Node(4,"a");
-        Node node5 = new Node(5,"a");
-        Node node6 = new Node(6,"a");
+        Node_single nodeSingle1 = new Node_single(1,"a");
+        Node_single nodeSingle2 = new Node_single(2,"a");
+        Node_single nodeSingle3 = new Node_single(3,"a");
+        Node_single nodeSingle4 = new Node_single(4,"a");
+        Node_single nodeSingle5 = new Node_single(5,"a");
+        Node_single nodeSingle6 = new Node_single(6,"a");
 
         singleLinkedList singleLinkedList1 = new singleLinkedList();
         singleLinkedList singleLinkedList2 = new singleLinkedList();
 
-        singleLinkedList1.add(node1);
-        singleLinkedList1.add(node3);
-        singleLinkedList1.add(node5);
-        singleLinkedList2.add(node2);
-        singleLinkedList2.add(node4);
-        singleLinkedList2.add(node6);
+        singleLinkedList1.add(nodeSingle1);
+        singleLinkedList1.add(nodeSingle3);
+        singleLinkedList1.add(nodeSingle5);
+        singleLinkedList2.add(nodeSingle2);
+        singleLinkedList2.add(nodeSingle4);
+        singleLinkedList2.add(nodeSingle6);
 
         singleLinkedList2.showList();
         System.out.println("================");
