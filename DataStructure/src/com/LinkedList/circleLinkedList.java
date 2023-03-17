@@ -5,7 +5,7 @@ public class circleLinkedList {
     private Child first = new Child(-1);
 
     //创建环形列表
-    public void establish(int length) {
+    public void add(int length) {
         if (length < 1) {
             System.out.println("length error...");
             return;
@@ -35,6 +35,38 @@ public class circleLinkedList {
         while (point.getNext() != first) {
             System.out.println(point);
             point = point.getNext();
+        }
+    }
+
+    //约瑟夫问题解法
+    public void childSort(int length,int startNum,int intervalNum) {
+        add(length);
+        if (first == null || startNum < 1 || startNum > length) {
+            System.out.println("error");
+        }
+        Child point = first;
+        //先使point指向环形末尾
+        while (point.getNext() != first) {
+            point = point.getNext();
+        }
+        //将point和first向前移动k - 1个节点
+        for (int i = 1;i <= startNum - 1;i ++) {
+            point = point.getNext();
+            first = first.getNext();
+        }
+
+        while (true) {
+            for (int i = 1;i <= intervalNum;i ++) {
+                point = point.getNext();
+                first = first.getNext();
+                System.out.println(first);
+                first = first.getNext();
+                point.setNext(first);
+            }
+            if (first == point) {
+                System.out.println(first);
+                break;
+            }
         }
     }
 }

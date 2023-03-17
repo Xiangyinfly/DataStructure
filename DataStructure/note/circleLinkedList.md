@@ -4,3 +4,13 @@
 ## 遍历环形链表
 1.先让一个辅助指针(变量)point,指向first节点  
 2.然后通过一个while循环遍历该环形链表即可,point.next == first结束
+## 约瑟夫问题
+设有n个人，从第k个开始报数，每数m次报一下  
+1.创建一个辅助指针(helper,事先应该指向环形链表的最后这个节点)  
+2.小孩报数前，先让first和helper指针同时的移动 k - 1 次  
+3.小孩报数时,让first和helper指针同时的移动 m - 1 次  
+4.这时就可以将first指向的小孩节点出圈  
+>first = first.next  
+helper.next = first  
+
+原来first指向的节点就没有任何引用，就会被回收

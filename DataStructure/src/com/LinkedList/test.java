@@ -2,7 +2,7 @@ package com.LinkedList;
 
 public class test {
     public static void main(String[] args) {
-
+/*
         Node_single nodeSingle1 = new Node_single(1,"a");
         Node_single nodeSingle2 = new Node_single(2,"a");
         Node_single nodeSingle3 = new Node_single(3,"a");
@@ -30,6 +30,11 @@ public class test {
         singleLinkedList2.showList();
         System.out.println("================");
         singleLinkedList1.showList();
+*/
+
+        circleLinkedList circleLinkedList = new circleLinkedList();
+        circleLinkedList.childSort(5,1,2);
+
 
     }
 }
