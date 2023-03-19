@@ -65,13 +65,13 @@ public class arrayStack {
                 res = num1 + num2;
                 break;
             case '-' :
-                res = num2 - num1;//🌟
+                res = num2 - num1;//🌟注意顺序
                 break;
             case '*' :
                 res = num1 * num2;
                 break;
             case '/' :
-                res = num2 / num1;
+                res = num2 / num1;//🌟注意顺序
                 break;
         }
         return res;
