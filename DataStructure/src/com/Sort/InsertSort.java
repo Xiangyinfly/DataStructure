@@ -16,7 +16,9 @@ public class InsertSort {
                 array[insertIndex + 1] = array[insertIndex];
                 insertIndex --;//满足insertValue < array[insertIndex]情况下向前推进
             }
-            array[insertIndex + 1] = insertValue;
+            if (insertIndex + 1 != i) {
+                array[insertIndex + 1] = insertValue;
+            }
         }
     }
 }
