@@ -8,8 +8,8 @@ public class ShellSort {
      * 稳定性：不稳定。
      */
 
-    //交换式
     /*
+    //交换式
     我一开始错误的方法：
     public static void shellSort1(int[] array) {
         int temp = 0;
@@ -31,6 +31,7 @@ public class ShellSort {
     }
     */
 
+    //交换式
     public static void shellSort1(int[] array) {
         int temp = 0;
         int gap = array.length / 2;
