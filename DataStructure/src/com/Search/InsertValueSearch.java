@@ -2,25 +2,23 @@ package com.Search;
 
 import java.util.ArrayList;
 
-public class BinarySearch {
+public class InsertValueSearch {
     /*
-    二分查找
-    如果没有该元素，返回-1
+    插值查找
      */
-
-    public static ArrayList<Integer> binarySearch(int[] array, int left, int right, int target) {
+    public static ArrayList<Integer> insertValueSearch(int[] array, int left, int right, int target) {
         ArrayList<Integer> arrayList = new ArrayList<>();
-        if (left > right) {
+        if (left > right || target > array[array.length - 1] || target < array[0]) {
             return arrayList;
         }
 
-        int mid = (left + right) / 2;
+        int mid = left + (right - left) * (target - array[left]) / (array[right] - array[left]);
 
         if (array[mid] > target) {
-            return binarySearch(array,left,mid - 1,target);
+            return insertValueSearch(array,left,mid - 1,target);
         }
         if (array[mid] < target) {
-            return binarySearch(array,mid + 1,right,target);
+            return insertValueSearch(array,mid + 1,right,target);
         } else {
             int temp = mid - 1;
             while (temp >= 0 && array[temp] == target) {
