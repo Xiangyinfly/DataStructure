@@ -5,6 +5,7 @@ public class Node {
     private String name;
     private Node left_next;
     private Node right_next;
+    private Node parent;
 
     public Node(int num, String name) {
         this.num = num;
@@ -64,5 +65,13 @@ public class Node {
 
     public void setRightType(int rightType) {
         this.rightType = rightType;
+    }
+
+    public Node getParent() {
+        return parent;
+    }
+
+    public void setParent(Node parent) {
+        this.parent = parent;
     }
 }

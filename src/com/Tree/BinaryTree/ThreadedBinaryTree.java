@@ -79,22 +79,79 @@ public class ThreadedBinaryTree {
         }
         pre = node;
 
-        preThreadNode(node.getLeft_next());
-        preThreadNode(node.getRight_next());
+        if (node.getLeftType() == 0) {//为什么这里要判断而中序不需要判断？
+            preThreadNode(node.getLeft_next());
+        }
+        if (node.getRightType() == 0) {
+            preThreadNode(node.getRight_next());
+        }
     }
 
     public void preOrderList() {
         Node point = root;
-        System.out.println(point);
-        while (point.getLeftType() == 0) {
-            point = point.getLeft_next();
+        while (point != null) {
+            while (point.getLeftType() == 0) {
+                System.out.println(point);//输出当前节点
+                point = point.getLeft_next();//如果有左子树，先输出左节点
+            }
             System.out.println(point);
+            point = point.getRight_next();//没有左子树后就沿线索向右遍历输出
         }
-        while (point.getRightType() == 1) {
-            point = point.getRight_next();
-            System.out.println(point);
+    }
+
+    //================================后序线索化二叉树及其遍历================================
+    private void postThreadedNodes(Node node) {
+        if (node == null) {
+            return;
         }
-        point = point.getLeft_next();
+
+        //线索化左子树
+        infixThreadNode(node.getLeft_next());
+
+        //线索化右子树
+        infixThreadNode(node.getRight_next());
+
+        //线索化当前节点
+        //处理当前节点的前驱节点
+        if (node.getLeft_next() == null) {
+            node.setLeft_next(pre);
+            node.setLeftType(1);
+        }
+        //处理当前节点的后继节点
+        if (pre != null && pre.getRight_next() == null) {
+            pre.setRight_next(node);
+            pre.setRightType(1);
+        }
+        pre = node;
+    }
+
+    public void postThreadedList() {
+        Node point = root;
+        while (point != null) {
+            while (point.getLeftType() == 0) {
+                point = point.getLeft_next();
+            }
+            while (point != null && point.getRightType() == 1) {
+                System.out.println(point);
+                pre = point;
+                point = point.getRight_next();
+            }
+            //若point结点为根节点，则遍历完成
+            if (point == root) {
+                System.out.println(point);
+                return;
+            }
+            //若pot.getRight_next() == pre则说明以pot为根结点的子树遍历完成，应遍历pot兄弟结点。
+            //先获取pot结点的父节点，再获取pot结点的兄弟结点。
+            //若pot结点无兄弟结点，则继续向上寻找。
+            while (point != null && point.getRight_next() == pre) {
+                System.out.println(point);
+                pre = point;
+                point = point.getParent();
+            }
+            if (point != null && point.getRightType() == 0) {
+                point = point.getRight_next();
+            }
+        }
     }
 }
-
