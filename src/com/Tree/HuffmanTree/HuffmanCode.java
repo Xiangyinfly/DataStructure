@@ -3,15 +3,56 @@ package com.Tree.HuffmanTree;
 import java.util.*;
 
 public class HuffmanCode {
-    //整合方法
-    //传入string，return string的哈夫曼编码表
+    //=========================================编码=========================================
+    //整合方法：该方法获得压缩后的数据（编码）
+    public static byte[] HuffmanCompress(String string) {
+        byte[] bytes = string.getBytes();
+        return getCompressCode(bytes,StringToHCS(string));
+    }
+
+
+    /**
+     * 获得压缩后的数据
+     * @param bytes 原始数据的字节数组
+     * @param huffmanCode 哈夫曼编码表
+     * @return 压缩后数据的字节数组
+     */
+    private static byte[] getCompressCode(byte[] bytes, Map<Byte,String> huffmanCode) {
+        //获得哈夫曼编码，存储在stringBuilder中
+        StringBuilder stringBuilder = new StringBuilder();
+        for (byte b :bytes) {
+            stringBuilder.append(huffmanCode.get(b));
+        }
+
+        //以8位字节存储
+        int length;
+        if (stringBuilder.length() % 8 == 0) {
+            length = stringBuilder.length() / 8;
+        } else {
+            length = stringBuilder.length() / 8 + 1;
+        }
+
+        int index = 0;
+        String string;
+        byte[] huffmanCodeBytes = new byte[length];
+        for (int i = 0; i < stringBuilder.length(); i += 8) {
+            if (i + 8 > stringBuilder.length()) {
+                string = stringBuilder.substring(i);//不够8位直接取到最后
+            } else {
+                string = stringBuilder.substring(i, i + 8);
+            }
+            huffmanCodeBytes[index ++] = (byte) Integer.parseInt(string,2);
+        }
+
+        return huffmanCodeBytes;
+    }
+
+    //整合方法：传入string，返回string的哈夫曼编码表
     public static Map<Byte,String> StringToHCS(String s) {
         byte[] bytes = s.getBytes();
         return getCode(createHT(getNodes(bytes)));
     }
 
-
-    
     static Map<Byte,String> huffmanCode = new HashMap<Byte,String>();
     static StringBuilder stringBuilder = new StringBuilder();
 
@@ -23,6 +64,7 @@ public class HuffmanCode {
         getCode(root,"",stringBuilder);
         return huffmanCode;
     }
+
     /**
      * 得到node的所有叶子结点的哈夫曼编码，放入huffmanCode
      * @param node 传入的节点
@@ -61,7 +103,6 @@ public class HuffmanCode {
         //返回root
         return nodes.get(0);
     }
-
 
     //此方法用于数据以Node形式放入list中
     private static List<Node> getNodes(byte[] bytes) {
