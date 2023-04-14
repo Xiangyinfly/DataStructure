@@ -4,7 +4,7 @@ public class HeapSort {
     /*
      * 堆排序
      */
-    public void heapSort(int[] array) {
+    public static void heapSort(int[] array) {
         int temp = 0;
         //将数组转化为大顶堆
         for (int i = array.length / 2 - 1; i >= 0; i --) {
