@@ -1,15 +1,65 @@
 package com.Tree.HuffmanTree;
 
+import java.io.*;
 import java.util.*;
 
 public class HuffmanCode {
-    //=========================================编码=========================================
-    //整合方法：该方法获得压缩后的数据（编码）
-    public static byte[] HuffmanCompress(String string) {
-        byte[] bytes = string.getBytes();
-        return getCompressCode(bytes,StringToHCS(string));
+
+    //文件压缩以及解压
+    public static void fileCompress(String srcFile,String dstFile) {
+        try {
+            //直接创建很大的byte数组？待改进
+            FileInputStream fileInputStream = new FileInputStream(srcFile);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(dstFile));
+            byte[] data = new byte[fileInputStream.available()];
+            fileInputStream.read(data);
+            objectOutputStream.writeObject(HuffmanCompress(data));
+            objectOutputStream.writeObject(getHCS(data));
+
+            fileInputStream.close();
+            objectOutputStream.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
+    public static void fileDecompress(String srcFile,String dstFile) {
+        try {
+            ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(srcFile));
+            FileOutputStream fileOutputStream = new FileOutputStream(dstFile);
+            byte[] data = (byte[]) objectInputStream.readObject();
+            Map<Byte, String> HCS = (Map) objectInputStream.readObject();
+            fileOutputStream.write(huffmanDecode(data,HCS));
+
+            objectInputStream.close();
+            fileOutputStream.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    //=========================================编码=========================================
+
+    //整合后的方法
+    /**
+     * 利用哈夫曼编码压缩
+     * @param bytes 原始数据得到的字节数组
+     * @return 编码后的字节数组
+     */
+    public static byte[] HuffmanCompress(byte[] bytes) {
+        return getCompressCode(bytes, getHCS(bytes));
+    }
+
+    /**
+     * 返回传入byte数组的哈夫曼编码表
+     * @param bytes 原始数据的字节数组
+     * @return 哈夫曼编码表
+     */
+    public static Map<Byte,String> getHCS(byte[] bytes) {
+        return getCode(createHT(getNodes(bytes)));
+    }
+
+    //=========================================
 
     /**
      * 获得压缩后的数据
@@ -24,15 +74,14 @@ public class HuffmanCode {
             stringBuilder.append(huffmanCode.get(b));
         }
 
-        //以8位字节存储
-        int length;
-        if (stringBuilder.length() % 8 == 0) {
-            length = stringBuilder.length() / 8;
-        } else {
-            length = stringBuilder.length() / 8 + 1;
-        }
+        //以字节数组存储
 
-        int index = 0;
+        //+2是因为：
+        //1.huffmanCodeBytes[0]存储最后一个字节数据的有效长度
+        //2.huffmanCodeBytes最后一个字节存储编码后的01字符串末尾不足8位的部分。如果01数据长度能被8整除，则最后一个字节为空
+        int length = stringBuilder.length() / 8 + 2;
+
+        int index = 1;
         String string;
         byte[] huffmanCodeBytes = new byte[length];
         for (int i = 0; i < stringBuilder.length(); i += 8) {
@@ -41,19 +90,15 @@ public class HuffmanCode {
             } else {
                 string = stringBuilder.substring(i, i + 8);
             }
-            huffmanCodeBytes[index ++] = (byte) Integer.parseInt(string,2);
+            huffmanCodeBytes[index ++] = (byte) Integer.parseInt(string,2);//以二进制进行解析字符串
         }
+
+        huffmanCodeBytes[0] = (byte)(stringBuilder.length() % 8);//获得最后一个字节的有效长度
 
         return huffmanCodeBytes;
     }
 
-    //整合方法：传入string，返回string的哈夫曼编码表
-    public static Map<Byte,String> StringToHCS(String s) {
-        byte[] bytes = s.getBytes();
-        return getCode(createHT(getNodes(bytes)));
-    }
-
-    static Map<Byte,String> huffmanCode = new HashMap<Byte,String>();
+    static Map<Byte,String> huffmanCodeSet = new HashMap<Byte,String>();
     static StringBuilder stringBuilder = new StringBuilder();
 
     //重载一下
@@ -62,11 +107,11 @@ public class HuffmanCode {
             return null;
         }
         getCode(root,"",stringBuilder);
-        return huffmanCode;
+        return huffmanCodeSet;
     }
 
     /**
-     * 得到node的所有叶子结点的哈夫曼编码，放入huffmanCode
+     * 得到node的所有叶子结点的哈夫曼编码，放入huffmanCodeSet
      * @param node 传入的节点
      * @param code 路径：左1右2
      * @param stringBuilder 用于拼接
@@ -79,12 +124,16 @@ public class HuffmanCode {
                 getCode(node.left,"0",stringBuilder1);
                 getCode(node.right,"1",stringBuilder1);
             } else {
-                huffmanCode.put(node.data, stringBuilder1.toString());
+                huffmanCodeSet.put(node.data, stringBuilder1.toString());
             }
         }
     }
 
-    //此方法用于创建哈夫曼树
+    /**
+     * 创建哈夫曼树
+     * @param nodes 原始数据转化而来的节点的列表
+     * @return 哈夫曼树的根节点
+     */
     private static Node createHT(List<Node> nodes) {
         while (nodes.size() > 1) {//List中只有一个数据时，建立完毕
             //排序
@@ -104,7 +153,11 @@ public class HuffmanCode {
         return nodes.get(0);
     }
 
-    //此方法用于数据以Node形式放入list中
+    /**
+     * 原始数据转化为Node形式放入list中
+     * @param bytes 原始数据的的byte数组
+     * @return 原始数据转化而来的节点的列表
+     */
     private static List<Node> getNodes(byte[] bytes) {
         ArrayList<Node> nodes = new ArrayList<>();
 
@@ -127,5 +180,83 @@ public class HuffmanCode {
         }
 
         return nodes;
+    }
+
+    //=========================================解码=========================================
+
+    /**
+     * 利用哈夫曼编码解压
+     * @param huffmanCodeBytes 编码后数据
+     * @param huffmanCodeSet 编码表
+     * @return 解码后数据的byte数组
+     */
+    public static byte[] huffmanDecode(byte[] huffmanCodeBytes, Map<Byte,String> huffmanCodeSet) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 1; i < huffmanCodeBytes.length - 1; i++) {
+            stringBuilder.append(byteToBString(huffmanCodeBytes[i]));
+        }
+        //拼接最后一个字节，截取huffmanCodeBytes[0]中存储的有效长度
+        //如果最后一个字节为空，则huffmanCodeBytes[0] = 0，不会截取任何数据
+        stringBuilder.append(byteToBString(huffmanCodeBytes[huffmanCodeBytes.length - 1]).
+                substring(8 - huffmanCodeBytes[0]));
+
+        //反转哈夫曼编码表
+        Map<String,Byte> reHCS = new HashMap<>();
+        for (Map.Entry<Byte,String> byteStringEntry :huffmanCodeSet.entrySet()) {
+            reHCS.put(byteStringEntry.getValue(),byteStringEntry.getKey());
+        }
+
+//        ArrayList<Byte> dataList = new ArrayList<>();
+//        int count;
+//        for (int i = 0;i < stringBuilder.length();i = i + count) {
+//            count = 1;
+//            boolean flag = true;
+//            Byte b = null;
+//            while (flag) {
+//                b = reHCS.get(stringBuilder.substring(i, i + count));
+//                if (b == null) {
+//                    count ++;
+//                } else {
+//                    flag = false;
+//                }
+//            }
+//            dataList.add(b);
+//        }
+        //利用containsKey的改进
+        ArrayList<Byte> dataList = new ArrayList<>();
+        int count;
+        for (int i = 0; i < stringBuilder.length(); i += count) {
+            boolean flag = true;
+            count = 1;
+            while (flag) {
+                if (reHCS.containsKey(stringBuilder.substring(i, i + count))) {//substring左闭右开
+                    dataList.add(reHCS.get(stringBuilder.substring(i, i + count)));
+                    flag = false;
+                } else {
+                    count ++;
+                }
+            }
+        }
+
+        byte[] data = new byte[dataList.size()];
+        for (int i = 0; i < dataList.size(); i++) {
+            data[i] = dataList.get(i);
+        }
+        return data;
+    }
+
+    /**
+     * 字节转二进制字符串
+     * @param b 字节
+     * @return b的二进制字符串
+     */
+    private static String byteToBString(byte b) {
+        int i = b;
+        if (i >= 0) {
+            i |= 256;
+        }
+        String s = Integer.toBinaryString(i);//返回的是i的补码
+
+        return s.substring(s.length() - 8);
     }
 }
