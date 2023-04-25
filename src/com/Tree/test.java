@@ -1,6 +1,8 @@
 package com.Tree;
 
 
+import com.Tree.BinarySortTree.BinarySortTree;
+import com.Tree.BinarySortTree.Node;
 import com.Tree.HuffmanTree.HuffmanCode;
 
 
@@ -13,5 +15,16 @@ public class test {
 
 //        HuffmanCode.fileCompress("src/a.jpg","src/b.hcd");
 //        HuffmanCode.fileDecompress("src/b.hcd","src/c.jpg");
+
+        int[] arr = {7,3};
+        BinarySortTree b = new BinarySortTree();
+
+        for (int i = 0; i < arr.length; i++) {
+            b.add(new Node(arr[i]));
+        }
+        b.infixOrder();
+        b.delete(7);
+        System.out.println();
+        b.infixOrder();
     }
 }

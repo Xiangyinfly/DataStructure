@@ -1,7 +1,7 @@
 package com.Sort;
 
 public class QuickSort {
-    /**
+    /*
      * 快速排序
      * 在最糟情况下，栈长为O(n)；在最佳情况下，栈长为O(log n)
      *
