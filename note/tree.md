@@ -46,7 +46,7 @@
 第一种情况：删除叶子节点  
 (1)需要先去找到要删除的节点targetNode  
 (2)找到targetNode的父结点parent  
-(3)确定targetNode是parent的左子结点是右子结点  
+(3)确定targetNode是parent的左子结点还是右子结点  
 (4)根据前面的情况来对应删除
 >左子结点parent.left=null  
 >右子结点parent.right=null
