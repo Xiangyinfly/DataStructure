@@ -20,7 +20,7 @@ public class Queen8 {
             return;
         }
         for (int i = 0; i < 8; i++) {
-            array[n-1] = i;
+            array[n-1] = i + 1;
             if (judge(n)) {
                 layQueen(n+1);
             }
