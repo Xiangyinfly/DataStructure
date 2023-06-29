@@ -32,7 +32,7 @@ public class Queen8 {
      * 该方法判断是否与摆放好的皇后冲突
      */
     public boolean judge(int n) {
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < n - 1; i++) {
             //如果在同一列或对角线，返回false
             if (array[i] == array[n-1] ||
                     Math.abs(n-1-i) == Math.abs(array[n-1] - array[i])) {
